@@ -1,0 +1,15 @@
+/* @tailwind directives - processed by Tailwind CSS build pipeline */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-100 text-slate-800 font-sans;
+}
+
+/* Custom styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
