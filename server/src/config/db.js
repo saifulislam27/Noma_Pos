@@ -5,8 +5,13 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306, // Pastikan DB_PORT terbaca
   waitForConnections: true,
-  connectionLimit: 10
+  connectionLimit: 10,
+  // Tambahkan blok ssl ini:
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 module.exports = pool;
