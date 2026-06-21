@@ -8,7 +8,6 @@ const productRoutes = require("./routes/productRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const cashierRoutes = require("./routes/cashierRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-// 🌟 1. Import file reportRoutes di sini
 const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
@@ -18,15 +17,31 @@ const app = express();
 | Global Middleware
 |--------------------------------------------------------------------------
 */
-app.use(cors());
+// 🌟 PERBAIKAN: Konfigurasi CORS agar mendukung akses dari Vercel
+const corsOptions = {
+  origin: [
+    "https://noma-hqd2utrow-rocking199.vercel.app", 
+    "http://localhost:5173" // Tambahkan jika Anda masih sering testing lokal
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // Wajib agar HP mengizinkan pengiriman kredensial
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// 🌟 TAMBAHAN: Logging untuk Debugging di Railway
+// Ini akan membantu Anda melihat request apa yang masuk dari HP di dashboard Railway
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 /*
 |--------------------------------------------------------------------------
 | Static Files
 |--------------------------------------------------------------------------
 */
-// 🌟 PERBAIKAN KUNCI: Diarahkan langsung ke folder 'uploads/products' agar pas dengan pemanggilan frontend
 app.use(
   "/uploads/products",
   express.static(path.join(__dirname, "uploads/products"))
@@ -43,8 +58,6 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/cashiers", cashierRoutes);
-
-// 🌟 2. Daftarkan middleware route untuk Laporan (Reports)
 app.use("/api/reports", reportRoutes);
 
 /*
